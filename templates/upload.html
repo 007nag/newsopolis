@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+
+
+{% block body %}
+<ul>
+    {% for item in data %}
+        <li>{{item._id}}</li>
+        <li>{{item._score}}</li>
+        
+    {% endfor %}
+    </ul>
+{% endblock %}

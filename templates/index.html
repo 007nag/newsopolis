@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+
+
+{% block body %}
+    <h1 id='title' class="neon">NE<span class="flicker-slow">W</span>S<span class="flicker-fast">OPO</span>LIS</h1>
+    <div id="searchboxdiv">
+        <form action="/send_query" method="POST" id="searchboxform" enctype="multipart/form-data">
+            <input type="text" placeholder="enter your query" name="query" id="queryinput"></input>
+            <label>FROM<input type="date" name="fromdate" value="2010-01-01"></input></label>
+            <label>TO<input type="date" name="todate" value="2022-04-01"></input></label>
+            <label>NATIONAL<input type="checkbox" name="national"></label>
+            <label>INTERNATIONAL<input type="checkbox" name="international"></label>
+            <label>SPORT<input type="checkbox" name="sport"></label>
+            <label>BUSINESS<input type="checkbox" name="business"></label>
+            <label>MISC<input type="checkbox" name="miscellaneous"></label>
+            <label>UPLOAD IMAGE FOR OCR<input type="file" name="image"></label>
+            <label>BOOLEAN<input type="checkbox" name="boolean"></label>
+            <button type="button" id="speech">SPEECH</button>
+            <button type="submit">submit</button>
+        </form>
+        
+    </div>
+
+{% endblock %}
+
+
+
+
+

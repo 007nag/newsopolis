@@ -1,0 +1,87 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        {% block body %}
+        {% endblock %}
+
+    </body>
+</html>
+
+<style>
+    #title
+    {
+        animation: colorshift 3s linear infinite
+    }
+    @keyframes colorshift {
+        0%{
+            filter: hue-rotate(0deg);
+        }
+        100%{
+            filter: hue-rotate(360deg);
+        }
+    }
+    body
+    {
+        background-color: black;
+        color: white;
+    }
+    .neon{
+  font-family: 'Monoton', cursive;
+  font-size:100px;
+  color: greenyellow;
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: 400;
+  letter-spacing: 8px;
+  text-shadow: 1px 0px 4px #FFD5FF, 2px 0px 4px #FFD5FF, 3px 0px 4px #FFD5FF, 2px 0px 3px #D42CCA, 2px 3px 15px #D42CCA, 2px 0px 15px, 5px 0px 125px, 20px 0vw 200px #D42CCA,40px 0vw 200px #D42CCA;
+}
+
+.flicker-slow{
+  animation: flicker 3s linear infinite;
+}
+
+.flicker-fast{
+  animation: flicker 1s linear infinite;
+}
+
+@keyframes flicker {
+	0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+		//text-shadow: none;
+    opacity: .99;
+		
+	}
+	20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+		opacity: 0.4;
+        
+	}
+}
+
+#searchboxdiv
+{
+    top:50%;
+    left: 50%;
+}
+</style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $("#searchboxform").submit(function(e)
+    {
+        e.preventDefault();
+        //send and get news data to server through ajax;
+    });
+    $("#speech").click(function()
+    {
+        $.get("speech",function(data)
+    {
+        var a = $("#queryinput").val();
+        console.log(a);
+        $("#queryinput").val(a+" "+data['text']);
+        console.log(data);
+    });
+    })
+    
+</script>
