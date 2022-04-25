@@ -1,2 +1,2 @@
 # newsopolis
-# newsopolis
+# NEWS IR Project
