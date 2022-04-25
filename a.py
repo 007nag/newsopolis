@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request, redirect
-import tensorflow_hub as hub
+
 import os 
 import cv2
 import numpy as np
 import pytesseract
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
 import speech_recognition as sr
-
+from sentence_transformers import SentenceTransformer
+model = SentenceTransformer('./paraphrase-MiniLM-L6-v2')
 def speech2text():
     r = sr.Recognizer()
     text=""	
@@ -21,12 +22,12 @@ def speech2text():
     return text 
 
 
-model = hub.load("../model")
+
 from elasticsearch import Elasticsearch
 es = Elasticsearch("http://localhost:9200")
 def get_embedding(s):
-    embedding=model([s])
-    return embedding.numpy()[0]
+    embedding=model.encode([s])
+    return embedding[0]
 
 app = Flask(__name__)
 @app.route("/")
