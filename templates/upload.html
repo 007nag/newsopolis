@@ -3,11 +3,16 @@
 
 
 {% block body %}
-<ul>
+<div class="resultcontainer">
+
     {% for item in data %}
-        <li>{{item._id}}</li>
-        <li>{{item._score}}</li>
+    <div class="resultdiv">
+        <h1 style="text-align: center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">{{item.title}}</h1>
+        <h3>Date: {{item.date}}</h3>
+        <h3 style="text-align: center;">{{item.doc}}</h3>
         
+    </div>
     {% endfor %}
-    </ul>
+    
+</div>
 {% endblock %}
