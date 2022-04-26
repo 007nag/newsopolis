@@ -1,6 +1,9 @@
 <html>
     <head>
-
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Vibur&display=swap" rel="stylesheet">
+        
     </head>
     <body>
         {% block body %}
@@ -10,16 +13,97 @@
 </html>
 
 <style>
+    @keyframes disappear {
+        0%
+        {
+            opacity: 1;
+            transform: rotateX(0deg);
+        }
+        100%
+        {
+            opacity: 0;
+            transform: rotateX(360deg);
+        }
+    }
+    @keyframes appear {
+        0%
+        {
+            opacity: 0;
+            transform: rotateY(0deg);
+        }
+        100%
+        {
+            opacity: 1;
+            transform: rotateY(360deg);
+        }
+    }
+    #loading
+    {
+        animation: moveleftright 5s ease-in-out infinite; 
+        text-align: center;
+        opacity: 0;
+        z-index: 100000;
+        position: absolute;  top:50%;left: 50%;
+    }
+    @keyframes moveleftright
+    {
+        0%
+        {
+            transform: translate(0%) rotateX(0deg);
+        }
+        25%
+        {
+            transform: translate(50%) rotateX(180deg);
+        }
+        50%
+        {
+            transform: translate(0%) rotateX(360deg);
+        }
+        75%
+        {
+            transform: translate(-50%) rotateX(180deg);
+        }
+        100%
+        {
+            transform: translate(0%) rotateX(360deg);
+        }
+    }
+    .resultcontainer
+    {
+        margin-top: 30%;
+
+    }
+    .iframelda
+    {
+        justify-content: center;
+        margin: 5%;
+
+    }
+    .resultdiv
+    {
+        justify-content: center;
+        outline: none;
+    border-color: #8e691b;
+    box-shadow: 0 0 100px #9ecaed;
+        background: white;
+        color: black;
+        border-radius: 5px;
+        padding: 5%;
+        margin: 5%;
+        animation:  colorshift 3s linear infinite;
+    }
     #title
     {
-        animation: colorshift 3s linear infinite
+        animation: colorshift 5s linear infinite
     }
     @keyframes colorshift {
         0%{
             filter: hue-rotate(0deg);
+            
         }
         100%{
             filter: hue-rotate(360deg);
+            
         }
     }
     body
@@ -28,18 +112,25 @@
         color: white;
     }
     .neon{
-  font-family: 'Monoton', cursive;
+  font-family: 'Vibur', cursive;
   font-size:100px;
   color: greenyellow;
   position: absolute;
-  top: 5%;
+  top: 2%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-weight: 400;
   letter-spacing: 8px;
   text-shadow: 1px 0px 4px #FFD5FF, 2px 0px 4px #FFD5FF, 3px 0px 4px #FFD5FF, 2px 0px 3px #D42CCA, 2px 3px 15px #D42CCA, 2px 0px 15px, 5px 0px 125px, 20px 0vw 200px #D42CCA,40px 0vw 200px #D42CCA;
 }
-
+.rotateclass
+{
+    
+    
+    position: absolute;
+    left: -50;
+    animation: rot 2s ease-in-out infinite;
+}
 .flicker-slow{
   animation: flicker 3s linear infinite;
 }
@@ -52,6 +143,7 @@
 	0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
 		//text-shadow: none;
     opacity: .99;
+    
 		
 	}
 	20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
@@ -60,28 +152,446 @@
 	}
 }
 
+#options1
+{
+    background-color: #8e1b7700;
+    color: white;
+    padding: 10px;
+    opacity: 0;
+    top: 10;
+    position: absolute;
+    box-shadow: 0 0 100px #9ecaed;
+    animation: colorshift 3s linear infinite;
+    z-index: 1000;
+    border-radius: 10%;
+}
+#options2
+{
+    background-color: #8e1b7700;
+    color: white;
+    padding: 50px;
+    top: 10;
+    opacity: 0;
+    position: absolute;
+    box-shadow: 0 0 100px #9ecaed;
+    
+    animation: colorshift 3s linear infinite;
+    right: 10;
+    z-index: 1000;
+    border-radius: 50%;
+}
+@keyframes rot 
+{
+    0%
+    {
+        transform: rotateY(0deg);
+        
+    }
+    100%
+    {
+        transform: rotateY(360deg);
+    }
+}
 #searchboxdiv
 {
     top:50%;
     left: 50%;
 }
+body {
+    background: #212129;
+}
+
+::selection {
+    background: #212129;
+}
+
+#autocomplete
+{
+    position: absolute;
+    
+    
+    width: 400px;
+    height: 400px;
+    z-index: 200000000;
+    top: 35%;
+    left: 36%;
+}
+.dateformat {
+    position: relative;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    color: #FFF;
+    left: 250px;
+    top: 450px;
+}
+
+.checkbx {
+    position: absolute;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    color: #FFF;
+    left: 650px;
+    top: 450px;
+}
+
+.ocr {
+    position: absolute;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    color: #FFF;
+    left: 850px;
+    top: 450px;
+}
+
+/*.dateformat {
+    width: 100%;
+    height: 50px;
+    padding: 0px 70px 0 20px;
+    opacity: 0;
+    position: relative;
+    left: 250px;
+    top: 450px;
+    background: transparent;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    font-family: "Open Sans", Arial, Verdana;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #FFF;
+    transform: translate(0, 60px);
+    transition: all .3s cubic-bezier(0.000, 0.105, 0.035, 1.570);
+    transition-delay: 0.3s;
+}*/
+
+.search-wrapper {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 30%;
+    left: 50%;
+    animation:  colorshift 1s linear infinite;
+}
+
+
+
+.search-wrapper.active {}
+
+.search-wrapper .input-holder {
+    height: 70px;
+    width: 70px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0);
+    border-radius: 6px;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+}
+
+.search-wrapper.active .input-holder {
+    width: 450px;
+    border-radius: 50px;
+    background: rgba(0, 0, 0, 0.5);
+    transition: all .5s cubic-bezier(0.000, 0.105, 0.035, 1.570);
+}
+
+.search-wrapper .input-holder .search-input {
+    width: 100%;
+    height: 50px;
+    padding: 0px 70px 0 20px;
+    opacity: 0;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background: transparent;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    font-family: "Open Sans", Arial, Verdana;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #FFF;
+    transform: translate(0, 60px);
+    transition: all .3s cubic-bezier(0.000, 0.105, 0.035, 1.570);
+    transition-delay: 0.3s;
+}
+
+.search-wrapper.active .input-holder .search-input {
+    opacity: 1;
+    transform: translate(0, 10px);
+}
+
+.search-wrapper .input-holder .search-icon {
+    width: 70px;
+    height: 70px;
+    border: none;
+    border-radius: 6px;
+    background: #FFF;
+    padding: 0px;
+    outline: none;
+    position: relative;
+    z-index: 2;
+    float: right;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.search-wrapper.active .input-holder .search-icon {
+    width: 50px;
+    height: 50px;
+    margin: 10px;
+    border-radius: 30px;
+}
+
+.search-wrapper .input-holder .search-icon span {
+    width: 22px;
+    height: 22px;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    transform: rotate(45deg);
+    transition: all .4s cubic-bezier(0.650, -0.600, 0.240, 1.650);
+}
+
+.search-wrapper.active .input-holder .search-icon span {
+    transform: rotate(-45deg);
+}
+
+.search-wrapper .input-holder .search-icon span::before,
+.search-wrapper .input-holder .search-icon span::after {
+    position: absolute;
+    content: '';
+}
+
+.search-wrapper .input-holder .search-icon span::before {
+    width: 4px;
+    height: 11px;
+    left: 9px;
+    top: 18px;
+    border-radius: 2px;
+    background: #FE5F55;
+}
+
+.search-wrapper .input-holder .search-icon span::after {
+    width: 14px;
+    height: 14px;
+    left: 0px;
+    top: 0px;
+    border-radius: 16px;
+    border: 4px solid #FE5F55;
+}
+
+.search-wrapper .close {
+    position: absolute;
+    z-index: 1;
+    top: 24px;
+    right: 20px;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    transform: rotate(-180deg);
+    transition: all .3s cubic-bezier(0.285, -0.450, 0.935, 0.110);
+    transition-delay: 0.2s;
+}
+
+.search-wrapper.active .close {
+    right: -50px;
+    transform: rotate(45deg);
+    transition: all .6s cubic-bezier(0.000, 0.105, 0.035, 1.570);
+    transition-delay: 0.5s;
+}
+
+.search-wrapper .close::before,
+.search-wrapper .close::after {
+    position: absolute;
+    content: '';
+    background: #FE5F55;
+    border-radius: 2px;
+}
+
+.search-wrapper .close::before {
+    width: 5px;
+    height: 25px;
+    left: 10px;
+    top: 0px;
+}
+
+.search-wrapper .close::after {
+    width: 25px;
+    height: 5px;
+    left: 0px;
+    top: 10px;
+}
+#myIframe
+{
+    background-color: white;
+    width: 1200px;
+    height: 800px;
+    color: white;
+    justify-content: center;
+    margin-left: 10%;
+
+}
+#pleasespeak
+{
+    animation: rotateanim 5s ease-in-out infinite;
+    opacity: 0;
+}
+@keyframes rotateanim 
+{
+    0%{ transform: rotateY(0deg);}
+    100%{ transform: rotateY(360deg);}
+}
+.autocompleteelements:hover
+{
+    cursor:grab;
+    background-color: white;
+    color: #212129;
+}
+.headlinecontainer
+{
+    margin-top: 25%;
+    margin-left:auto;
+    margin-right:auto;
+    background-color: white;
+    color: #212129;
+    width: max-content;
+    height: max-content;
+    padding: 20px;
+    border-radius: 50px;
+    align-content: center;
+    box-shadow: 0 0 100px #4dca0e;
+    animation: colorshift 2s ease-in-out infinite;
+}
+.headlineparagraph
+{
+    font-size: large;
+    font-weight: 300;
+    align-content: center;
+}
 </style>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript">
+
+
+    $("#trendingheadlines").on("click",function()
+    {
+        $("#loading").css('opacity',1);
+        var formm =   $("#searchboxform")[0]
+        var formd = new FormData(formm);
+        $.ajax({
+            type:"POST",enctype: 'multipart/form-data',url:"/trendingheadlines",
+            processData: false,
+            contentType: false,
+            data:formd,success:function(data)
+            {
+                console.log("success");
+                $("#loading").css('opacity',0);
+                $("#results").html('<div class="headlinecontainer"><h1>Trending Headlines'+data+'</h1></div>');
+                
+            }
+        });
+    });
+    jQuery.support.cors = true;
+    
+    $(document).on("click",".autocompleteelements",function()
+    {
+        
+        $("#queryinput").val($(this).text());
+        autocomp();
+
+    });
+    
     $("#searchboxform").submit(function(e)
     {
+        $("#autocomplete").html("");
+        $("#loading").css('opacity',1);
+        var formm =   $("#searchboxform")[0]
+        var formd = new FormData(formm);
         e.preventDefault();
+        $.ajax({
+            type:"POST",enctype: 'multipart/form-data',url:"/",
+            processData: false,
+            contentType: false,
+            data:formd,success:function(data)
+            {
+                $("#loading").css('opacity',0);
+                $("#results").html(data);
+                
+            }
+        });
+        
         //send and get news data to server through ajax;
     });
     $("#speech").click(function()
     {
+        $("#autocomplete").html("");
+        $("#pleasespeak").css('opacity',1);
         $.get("speech",function(data)
     {
+        $("#pleasespeak").css('opacity',0);
         var a = $("#queryinput").val();
-        console.log(a);
+        
         $("#queryinput").val(a+" "+data['text']);
-        console.log(data);
+        autocomp();
+        
     });
-    })
+    });
+    function autocomp()
+    {
+        
+        var formm =   $("#searchboxform")[0]
+        var formd = new FormData(formm);
+        
+        $.post()
+        $.ajax({
+            type:"POST",enctype: 'multipart/form-data',url:"/autocomplete",
+            processData: false,
+            contentType: false,
+            data:formd,success:function(d)
+            {
+                $("#autocomplete").html(d);
+                console.log(d);
+                
+                
+            }
+        });
+        
+    }
+    $("#queryinput").on("input",function()
+    {
+        autocomp();
+    });
+    $("#trendingtopics").click(function()
+    {
+        $("#autocomplete").html("");
+        $("#loading").css('opacity',1);
+        var fromdate=$("#fromdate").val();
+        var todate=$("#todate").val();
+        $.post("/lda",{"fromdate":fromdate,"todate":todate},function(e)
+        {
+            $("#loading").css('opacity',0);
+            $("#results").html('<div class="resultcontainer"><iframe title="lda" id="myIframe" src="lda.html"></iframe></div>');
+        });
+    });
     
+    function searchToggle(obj, evt){
+    var container = $(obj).closest('.search-wrapper');
+        if(!container.hasClass('active')){
+            container.addClass('active');
+            $("#autocomplete").html("");
+            $("#options1").css("animation","appear 1s linear 1");
+            $("#options1").css("opacity",1);
+            $("#options2").css("animation","appear 1s linear 1");
+            $("#options2").css("opacity",1);
+            evt.preventDefault();
+        }
+        else if(container.hasClass('active') && $(obj).closest('.input-holder').length == 0){
+            container.removeClass('active');
+            $("#autocomplete").html("");
+            $("#options1").css("animation","disappear 1s linear 1");
+            $("#options1").css("opacity",0);
+            $("#options2").css("animation","disappear 1s linear 1");
+            $("#options2").css("opacity",0);
+            // clear input
+            container.find('.search-input').val('');
+        }
+}
 </script>
