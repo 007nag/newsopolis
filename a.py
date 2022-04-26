@@ -23,17 +23,17 @@ docs = pickle.load(fff)
 
 fff.close()
 def speech2text():
-    r = sr.Recognizer()
-    text=""	
+    speechrec = sr.Recognizer()
+    res=""
     try:
-        with sr.Microphone() as source2:
-            r.adjust_for_ambient_noise(source2, duration=0.2)
-            audio2 = r.listen(source2)
-            text  = r.recognize_google(audio2)
-            text  = text.lower()
+        with sr.Microphone() as mic_source:
+            speechrec.adjust_for_ambient_noise(mic_source, duration=0.2)
+            get_audio = speechrec.listen(mic_source)
+            res  = speechrec.recognize_google(get_audio)
+    
     except:
         pass 
-    return text 
+    return res
 
 
 
@@ -44,7 +44,7 @@ def get_embedding(s):
     return embedding[0]
 
 app = Flask(__name__)
-import lda 
+
 with open("lda/dictionary",'rb') as fp:
     dictionary = pickle.load(fp)
 ldamodel   =  models.LdaModel.load('lda/lda.model')
@@ -189,13 +189,14 @@ def send_query():
         img=img.astype(np.float)"""
         fromdate=request.form['fromdate']
         todate=request.form['todate']
+        offset=int(request.form['offset'])
         categories=[]
         for i in ("national","international","business","sport","frontpage"):
             if request.form.get(i):
                 categories.append(i)
         if not categories:
             categories=["national","international","business","sport","frontpage"]
-        
+        print(fromdate,todate,offset,categories)
         
         if queryy=="":
             queryy='e'
@@ -204,12 +205,12 @@ def send_query():
             
             data=[{"date":docs[i-1][0],"title":docs[i-1][1],"doc":docs[i-1][2]} for i in bool_query(queryy,categories,fromdate,todate,100,0.1)]
         else:
-            data=[{"date":docs[i-1][0],"title":docs[i-1][1],"doc":docs[i-1][2]} for i in get_ids(queryy,categories,fromdate,todate,100,0.3)]
+            data=[{"date":docs[i-1][0],"title":docs[i-1][1],"doc":docs[i-1][2]} for i in get_ids(queryy,categories,fromdate,todate,100,0.3,offset)]
         
         return render_template("upload.html",data=data)
     else:
         return render_template("index.html")
-def get_ids(query_phrase,categories,from_date, to_date, size,threshold):
+def get_ids(query_phrase,categories,from_date, to_date, size,threshold,offset=0):
     queryssss = get_embedding(query_phrase)
     
     script_query = {
@@ -251,7 +252,7 @@ def get_ids(query_phrase,categories,from_date, to_date, size,threshold):
     "params": {"query_vector": queryssss }
     }}}
     
-    response = es.search(index="documents",body={'size': size,'query': script_query})
+    response = es.search(index="documents",body={'from':offset,'size': size,'query': script_query})
     return [int(i['_id']) for i in response['hits']['hits'] if float(i['_score'])>=threshold]
 def bool_query(query,categories,from_date,to_date,size,threshold):
     def f(i,j):
@@ -264,7 +265,7 @@ def bool_query(query,categories,from_date,to_date,size,threshold):
                 z=f(i+1,p[i]-1)
                 i=p[i]+1
                 if no:
-                    z=set(iii for iii in range(50000) if iii not in z)
+                    z=set(iii for iii in range(111000) if iii not in z)
                     #z=not z
                 st.append(z)
 
@@ -375,10 +376,14 @@ def get_trending_headlines(start_date,end_date,categories):
     d_list = list(d.keys())[:10]
     def return_headline(tple):
         heading_list = []
+        sse=set()
         for tple in d_list:
             for i in range(len(df.named_tags)):
-                if (tple[0] in df.named_tags[i]) and (tple[1] in df.named_tags[i]):
-                    heading_list.append(df.unpreprocessed_headline[i])
+                string_list = [i.lower() for i in df.named_tags[i]]
+                if (tple[0] in string_list) and (tple[1] in string_list):
+                    if df.unpreprocessed_headline[i] not in sse:
+                        heading_list.append(df.unpreprocessed_headline[i])
+                        sse.add(df.unpreprocessed_headline[i])
         return heading_list
     return return_headline(d_list)[:10]
 
@@ -401,6 +406,11 @@ def trendingheadlinesfunc():
         return res 
 
 
-
+@app.route("/covid_lda.html",methods=['GET'])
+def covid_lda():
+    return render_template("covid_lda.html")
+@app.route("/f_lda.html",methods=['GET'])
+def finance_lda():
+    return render_template("f_lda.html")
 if __name__=="__main__":
     app.run(debug=True)
