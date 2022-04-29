@@ -1,5 +1,6 @@
 
 
+from json import dumps
 
 from flask import Flask, render_template, request, redirect
 import pickle
@@ -203,7 +204,7 @@ def send_query():
         if request.form.get("boolean"):
             
             
-            data=[{"date":docs[i-1][0],"title":docs[i-1][1],"doc":docs[i-1][2]} for i in bool_query(queryy,categories,fromdate,todate,100,0.1)]
+            data=[{"date":docs[i-1][0],"title":docs[i-1][1],"doc":docs[i-1][2]} for i in bool_query(queryy,categories,fromdate,todate,100,0.2)]
         else:
             data=[{"date":docs[i-1][0],"title":docs[i-1][1],"doc":docs[i-1][2]} for i in get_ids(queryy,categories,fromdate,todate,100,0.3,offset)]
         
@@ -304,7 +305,7 @@ def bool_query(query,categories,from_date,to_date,size,threshold):
             else:
                 z=ids[q[i]]
                 if no:
-                    z=set(iii for iii in range(50000) if iii not in z)
+                    z=set(iii for iii in range(111000) if iii not in z)
                     #z=not z 
                 st.append(z)
                 i+=1
@@ -320,9 +321,9 @@ def bool_query(query,categories,from_date,to_date,size,threshold):
                 #st.append(a or b)
         return st[-1]
 
-    x=[]
+    
     se=set()
-    y=[{'a','c'},{'b','d','f'},{'a','b','c','d','e'},{'a','c','f'},{'c','d'}]
+    
 
     #q='a AND NOT ( b AND c )'
     
@@ -338,11 +339,11 @@ def bool_query(query,categories,from_date,to_date,size,threshold):
             p[st.pop(-1)]=i 
         elif q[i] not in ("AND","OR","NOT"):
             if q[i] not in ids:
-                ids[q[i]]=set(get_ids(q[i],categories,from_date,to_date,size,threshold))
+                ids[q[i]]=set(get_ids(q[i],categories,from_date,to_date,9999,threshold))
                 
     
     
-    return f(0,l-1)
+    return list(f(0,l-1))[:100]
 
 
 dff = pd.read_pickle("./df.pkl")
@@ -375,17 +376,22 @@ def get_trending_headlines(start_date,end_date,categories):
     d = dict(sorted(d.items(), key=lambda item: item[1],reverse=True))
     d_list = list(d.keys())[:10]
     def return_headline(tple):
-        heading_list = []
+        
         sse=set()
-        for tple in d_list:
-            for i in range(len(df.named_tags)):
-                string_list = [i.lower() for i in df.named_tags[i]]
-                if (tple[0] in string_list) and (tple[1] in string_list):
-                    if df.unpreprocessed_headline[i] not in sse:
-                        heading_list.append(df.unpreprocessed_headline[i])
-                        sse.add(df.unpreprocessed_headline[i])
-        return heading_list
-    return return_headline(d_list)[:10]
+        res=""
+        for i in range(len(df.named_tags)):
+            string_list = [i.lower() for i in df.named_tags[i]]
+            if (tple[0] in string_list) and (tple[1] in string_list):
+                if df.unpreprocessed_headline[i] not in sse:
+                    
+                    res+="<p class='headlineparagraph'>"+df.unpreprocessed_headline[i]+"</p>"
+                    sse.add(df.unpreprocessed_headline[i])
+                    if len(sse)>=10:break 
+        return res 
+    res={}
+    for tple in d_list:
+        res[str(tple[1])+" "+str(tple[0])]=return_headline(tple)
+    return res 
 
 @app.route("/trendingheadlines",methods=['POST'])
 def trendingheadlinesfunc():
@@ -399,11 +405,7 @@ def trendingheadlinesfunc():
         if not categories:
             categories=["national","international","business","sport","frontpage"]
         zzz=get_trending_headlines(fromdate,todate,categories)
-        res=""
-        for i in zzz:
-            res+="<p class='headlineparagraph'>"+i+"</p>"
-        print(res)
-        return res 
+        return dumps(zzz) 
 
 
 @app.route("/covid_lda.html",methods=['GET'])
